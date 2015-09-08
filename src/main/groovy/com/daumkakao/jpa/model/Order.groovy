@@ -10,6 +10,7 @@ import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
+import javax.persistence.OneToOne
 import javax.persistence.Table
 import javax.persistence.Temporal
 import javax.persistence.TemporalType
@@ -41,6 +42,10 @@ class Order {
     @OneToMany(mappedBy = "order")
     List<OrderItem> orderItems = new ArrayList<>()
 
+    @OneToOne
+    @JoinColumn(name = "DELIVERY_ID")
+    Delivery delivery
+
     void setMember (Member member) {
         // 기존 관계 제거
         if (this.member != null) {
@@ -54,5 +59,10 @@ class Order {
     void addOrderItem (OrderItem orderItem) {
         orderItems.add(orderItem)
         orderItem.order = this
+    }
+
+    void setDelivery (Delivery delivery) {
+        this.delivery = delivery
+        delivery.setOrder(this)
     }
 }
