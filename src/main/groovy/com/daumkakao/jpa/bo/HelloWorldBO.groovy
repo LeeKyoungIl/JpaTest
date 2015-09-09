@@ -24,8 +24,8 @@ class HelloWorldBO {
     }
 
     String getUser () {
-        List<Member> user = userRepository.findOne(1)
+        Member user = userRepository.findOne(1L)
 
-        user.get(0).name
+        user.name
     }
 }

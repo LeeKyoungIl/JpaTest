@@ -1,9 +1,11 @@
 package com.daumkakao.jpa.model
 
+import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
@@ -20,7 +22,7 @@ import javax.persistence.TemporalType
  */
 @Entity
 @Table(name = "ORDERS")
-class Order {
+class Order extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -35,14 +37,16 @@ class Order {
     @Enumerated(EnumType.STRING)
     OrderStatus status;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     Member member
 
-    @OneToMany(mappedBy = "order")
+    // OneToMany, ManyToMany 의 경우 기본 전략이 Lazy 로딩이다.
+    // 주문한 상품들의 경우 영속성 정의를 설정해서 영속 상태로 쉽게 만들어 준다.
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
     List<OrderItem> orderItems = new ArrayList<>()
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "DELIVERY_ID")
     Delivery delivery
 
